@@ -1,16 +1,13 @@
-完成：
-1、计算区块 （缺merkletree计算）
-2、接收区块  （缺merkletree计算）
-3、接收transaction  （缺验证）
 
-baseUrl 待定
-交互接口：
-1、根据区块高度获取当前区块，json形式
-   url  baseUrl+block/syncBlock/blockDetail
-   params   blockHeight 
-   请求方式  Get请求
-   返回：
- {
+### baseUrl 待定
+### 交互接口：
+#### 1、根据区块高度获取当前区块，json形式
+  * url  baseUrl+block/syncBlock/blockDetail
+  * params   blockHeight 
+  * 请求方式  Get请求
+  * 返回：
+```
+  {
      "transactionCount": 3,
      "blockHeight": 10,
      "blockHeader": {
@@ -135,19 +132,20 @@ baseUrl 待定
          }
      ]
  }
+```   
    
-   
-   2、分页获取所有区块
-       url  baseUrl+block/syncBlock/all
-      params   page  值从0开始，返回区块从末尾开始，每页10条 
-      请求方式  Get请求
-      返回：jsonarray  里面jsonobject为  1 中 json串。
+#### 2、分页获取所有区块
+      * url  baseUrl+block/syncBlock/all
+      * params   page  值从0开始，返回区块从末尾开始，每页10条 
+      * 请求方式  Get请求
+      * 返回：jsonarray  里面jsonobject为  1 中 json串。
     
-   3、通过transactionId查找transaction
-    url  baseUrl+block/syncBlock/getTransaction
-         params   transactionid 
-         请求方式  Get请求
-        返回：
+#### 3、通过transactionId查找transaction
+      * url  baseUrl+block/syncBlock/getTransaction
+      * params   transactionid 
+      * 请求方式  Get请求
+      * 返回
+```
    {
        "transactionId": "aaaaaaaaaaa",
        "from": "4from",
@@ -170,5 +168,6 @@ baseUrl 待定
        "signatures": "4signatures",
        "isSign": "4true"
    }
+```
    
    

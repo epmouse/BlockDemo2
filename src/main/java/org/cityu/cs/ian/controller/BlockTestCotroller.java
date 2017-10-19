@@ -103,11 +103,9 @@ public class BlockTestCotroller {
     @RequestMapping(value = "syncBlock/getTransaction", method = RequestMethod.GET)
     @ResponseBody
     public String getTransaction(String transactionid) {
-        //todo-根据transactionid查询这条transactiong的信息 返回 json
 
-        return "";
+        return syncBlockService.getTransactionById(transactionid);
     }
-
     @RequestMapping(value = "syncBlock/all", method = RequestMethod.GET)
     @ResponseBody
     public String getAllBlockForClient(int page) {  //1为最新的10条,依次往下

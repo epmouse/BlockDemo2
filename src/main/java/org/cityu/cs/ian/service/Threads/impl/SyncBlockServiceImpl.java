@@ -2,6 +2,7 @@ package org.cityu.cs.ian.service.Threads.impl;
 
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBean;
+import org.cityu.cs.ian.model.bean.Transaction1;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.util.HttpUtils;
 import org.cityu.cs.ian.util.JsonUtil;
@@ -63,8 +64,19 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
     }
 
     @Override
-    public String getTransactionById(String TransactionId) {
-        return null;
+    public String getTransactionById(String transactionId) {
+        List<BlockBean> allBlockBeans = blockModel.getAllBlockBeans();
+        final String[] transactionJson = {""};
+        for (int i = 0; i < allBlockBeans.size(); i++) {
+            List<Transaction1> transaction1s = allBlockBeans.get(i).getTransaction1s();
+            for (int j = 0; j < transaction1s.size(); j++) {
+                Transaction1 transaction1 = transaction1s.get(j);
+                if(transaction1.getTransactionId().equals(transactionId)){
+                   transactionJson[0] =JsonUtil.toJson(transaction1);
+               }
+            }
+        }
+        return transactionJson[0];
     }
 
     @Override
@@ -77,13 +89,13 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
         int from = page * 10;
         int i = allBlockBeans.size() - from;
         if (i < 10) {
-            while (i>0){
-                responseBeans.add(allBlockBeans.get(i-1));
+            while (i > 0) {
+                responseBeans.add(allBlockBeans.get(i - 1));
                 i--;
             }
         } else {
-            for(int j=0;j<10;j++){
-                responseBeans.add(allBlockBeans.get(i-1));
+            for (int j = 0; j < 10; j++) {
+                responseBeans.add(allBlockBeans.get(i - 1));
                 i--;
             }
         }

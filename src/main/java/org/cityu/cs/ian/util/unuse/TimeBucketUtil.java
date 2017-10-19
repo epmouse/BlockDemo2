@@ -130,7 +130,7 @@ public class TimeBucketUtil{
 	 * @param str
 	 * @return
      */
-	public static Long getLongTime(String str){
+	public static long getLongTime(String str){
 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy-MM-dd");
 		try{
 			long timeStart=(sdf2.parse(str).getTime())/1000;

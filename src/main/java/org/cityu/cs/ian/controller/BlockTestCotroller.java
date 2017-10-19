@@ -7,19 +7,14 @@ import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.service.Threads.ITransactionService;
 import org.cityu.cs.ian.util.Constant;
-import org.cityu.cs.ian.util.JsonUtil;
 import org.cityu.cs.ian.util.PropertiesUtil;
 import org.cityu.cs.ian.util.ResponseMsgUtils;
 import org.cityu.cs.ian.util.unuse.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -55,7 +50,6 @@ public class BlockTestCotroller {
         }
         return Constant.ERR_RESPONSE;
     }
-
     @RequestMapping(value = "add/block", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> acceptBlock(@RequestBody BlockBean block) {
@@ -66,7 +60,6 @@ public class BlockTestCotroller {
                 return ResponseMsgUtils.getResponseMap(true, null);
             } else {
                 System.out.println("BlockAcceptServicee中saveBlock（）方法文件写入失败，请查看异常");
-
                 return ResponseMsgUtils.getResponseMap(false,"文件写入失败");
             }
         } else {
@@ -102,10 +95,8 @@ public class BlockTestCotroller {
     }
     @RequestMapping(value = "syncBlock/blockDetail", method = RequestMethod.GET)
     @ResponseBody
-    public String getBlockByHeight(String blockName) {
-        //todo-根据blockheight 查询出对应block  返回json
-
-        return "";
+    public String getBlockByHeight(long blockHeight) {
+        return syncBlockService.getBlockJsonByHeight(blockHeight);
     }
     @RequestMapping(value = "syncBlock/getTransaction", method = RequestMethod.GET)
     @ResponseBody

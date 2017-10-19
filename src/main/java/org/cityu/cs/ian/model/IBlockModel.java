@@ -1,5 +1,7 @@
 package org.cityu.cs.ian.model;
 
+import org.cityu.cs.ian.model.bean.BlockBean;
+
 import java.io.File;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public interface IBlockModel {
    String getCurrentBlockName();
 
 
-   Long getTopBlockHeight();
+   long getTopBlockHeight();
     /**
      * 获取当前链的最后一个区块的hash
      * @return
@@ -42,5 +44,11 @@ public interface IBlockModel {
      * @return
      */
     List<File> getAllBolckFiles();
+
+    /**
+     * 获取所有区块对象集合
+     * @return
+     */
+    List<BlockBean> getAllBlockBeans();
 
 }

@@ -8,15 +8,17 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class BlockModelImpl implements IBlockModel{
+public class BlockModelImpl implements IBlockModel {
+    @Override
     public boolean saveBlockToLocal(String blockJson) {
         String rootPath = getBlockPath();
         File file = new File(rootPath + "/" + getCurrentBlockName());
         try {
-            FileUtils.write(file,blockJson,"utf-8");
+            FileUtils.write(file, blockJson, "utf-8");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -24,24 +26,26 @@ public class BlockModelImpl implements IBlockModel{
         }
     }
 
+    @Override
     public String getBlockPath() {
-        return PropertiesUtil.readValue("config.properties","block.localPath");
-    }
-
-    public String getCurrentBlockName() {
-        return (getTotalBlockCount() + 1)+"";
+        return PropertiesUtil.readValue("config.properties", "block.localPath");
     }
 
     @Override
-    public Long getTopBlockHeight() {
+    public String getCurrentBlockName() {
+        return (getTotalBlockCount() + 1) + "";
+    }
+
+    @Override
+    public long getTopBlockHeight() {
         return getTotalBlockCount();
     }
 
-
+    @Override
     public String getTopBlockHash() {
-        File file=null;
+        File file = null;
         List<File> files = getAllBolckFiles();
-        if(files!=null&files.size()>0){
+        if (files != null & files.size() > 0) {
             file = files.get(files.size() - 1);
         }
         try {
@@ -53,14 +57,34 @@ public class BlockModelImpl implements IBlockModel{
         }
         return null;
     }
+
+    @Override
     public long getTotalBlockCount() {
         List<File> files = getAllBolckFiles();
-        if(files!=null&files.size()>0)
-            System.out.println(files.get(files.size()-1));
+        if (files != null & files.size() > 0)
+            System.out.println(files.get(files.size() - 1));
         return (long) files.size();
     }
 
+    @Override
     public List<File> getAllBolckFiles() {
-        return (List<File>) FileUtils.listFiles(new File(getBlockPath()),null,true);
+        return (List<File>) FileUtils.listFiles(new File(getBlockPath()), null, true);
+    }
+    @Override
+    public List<BlockBean> getAllBlockBeans() {
+        List<File> allBolckFiles = getAllBolckFiles();
+        List<BlockBean> blockBeans = new ArrayList<>();
+        try {
+            for (File file : allBolckFiles) {
+                String json = null;
+                json = FileUtils.readFileToString(file, "utf-8");
+                blockBeans.add(JsonUtil.fromJson(json, BlockBean.class));
+            }
+            return blockBeans;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package org.cityu.cs.ian.service.Threads.impl;
 
+import org.cityu.cs.ian.model.BlockModelImpl;
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction1;
@@ -65,4 +66,6 @@ public class BlockAcceptService implements IBlockAcceptService {
         return blockModel.saveBlockToLocal(JsonUtil.toJson(blockBean));
 
     }
+
+
 }

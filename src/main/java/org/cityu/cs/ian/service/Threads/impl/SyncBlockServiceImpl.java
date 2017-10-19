@@ -1,8 +1,10 @@
 package org.cityu.cs.ian.service.Threads.impl;
 
 import org.cityu.cs.ian.model.IBlockModel;
+import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.util.HttpUtils;
+import org.cityu.cs.ian.util.JsonUtil;
 import org.cityu.cs.ian.util.PropertiesUtil;
 import org.cityu.cs.ian.util.unuse.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 public class SyncBlockServiceImpl implements ISyncBlockService {
@@ -25,8 +29,8 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
         if (StringUtil.issNullorEmpty(s)) {
             return;
         }
-        Long blockHeight = Long.valueOf(s);
-        Long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
+        long blockHeight = Long.valueOf(s);
+        long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
         for (long i = blockHeight; i <= currentServerTopBlockHeight; i++) {
             HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl+"/block/syncBlock/"+i, String.valueOf(i), blockModel.getBlockPath());
         }
@@ -38,12 +42,22 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
     }
 
     @Override
-    public String getBlockJsonByHeight(String blockHeight) {
-        return null;
+    public String getBlockJsonByHeight(long blockHeight) {
+        if(blockHeight>blockModel.getTopBlockHeight()){
+            throw new IllegalArgumentException("该区块高度不存，已超出当前链的范围");
+        }
+        List<BlockBean> allBlockBeans = blockModel.getAllBlockBeans();
+        final String[] blockJson = {""};
+        allBlockBeans.forEach(blockBean -> {
+            if(blockBean.getBlockHeight()==blockHeight){
+               blockJson[0] = JsonUtil.toJson(blockBean);
+            }
+        });
+        return blockJson[0];
     }
 
     @Override
-    public Long getTopBlockHeight() {
+    public long getTopBlockHeight() {
         return blockModel.getTopBlockHeight();
     }
 
@@ -60,7 +74,7 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
     @Override
     public void toDownload(HttpServletResponse mResponse, String fileName, File file) {
         mResponse.setContentType("application/octet-stream");
-//		mResponse.setContentLengthLong(file.length());
+        mResponse.setContentLength((int) file.length());
         byte[] buffer = new byte[8 * 1024];
         FileInputStream fis = null;
         BufferedInputStream bis = null;

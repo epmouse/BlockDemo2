@@ -9,8 +9,8 @@ public interface ISyncBlockService {
      */
     void downloadBlock();
     void getBlockFileByName(String blockName);
-    String getBlockJsonByHeight(String blockHeight);
-    Long getTopBlockHeight();
+    String getBlockJsonByHeight(long blockHeight);
+    long getTopBlockHeight();
     String getTransactionById(String TransactionId);
     String getBlockJsonListByPage(int page);
     void toDownload(HttpServletResponse mResponse, String fileName, File file);

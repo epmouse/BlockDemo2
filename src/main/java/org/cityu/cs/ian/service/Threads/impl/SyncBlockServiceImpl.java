@@ -14,6 +14,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,14 +26,14 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
     @Override
     public void downloadBlock() {
         String containAllBlcokServerUrl = PropertiesUtil.readValue("config.properties", "containAllBlcokServerUrl");
-        String s = HttpUtils.getInstance().requestByGetSync(containAllBlcokServerUrl+"/block/syncBlock/Highest");
+        String s = HttpUtils.getInstance().requestByGetSync(containAllBlcokServerUrl + "/block/syncBlock/Highest");
         if (StringUtil.issNullorEmpty(s)) {
             return;
         }
         long blockHeight = Long.valueOf(s);
         long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
         for (long i = blockHeight; i <= currentServerTopBlockHeight; i++) {
-            HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl+"/block/syncBlock/"+i, String.valueOf(i), blockModel.getBlockPath());
+            HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i, String.valueOf(i), blockModel.getBlockPath());
         }
     }
 
@@ -43,14 +44,14 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
 
     @Override
     public String getBlockJsonByHeight(long blockHeight) {
-        if(blockHeight>blockModel.getTopBlockHeight()){
+        if (blockHeight > blockModel.getTopBlockHeight()) {
             throw new IllegalArgumentException("该区块高度不存，已超出当前链的范围");
         }
         List<BlockBean> allBlockBeans = blockModel.getAllBlockBeans();
         final String[] blockJson = {""};
         allBlockBeans.forEach(blockBean -> {
-            if(blockBean.getBlockHeight()==blockHeight){
-               blockJson[0] = JsonUtil.toJson(blockBean);
+            if (blockBean.getBlockHeight() == blockHeight) {
+                blockJson[0] = JsonUtil.toJson(blockBean);
             }
         });
         return blockJson[0];
@@ -68,7 +69,26 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
 
     @Override
     public String getBlockJsonListByPage(int page) {
-        return null;
+        if (page > blockModel.getTotalBlockCount() / 10) {
+            return null;
+        }
+        List<BlockBean> allBlockBeans = blockModel.getAllBlockBeans();
+        List<BlockBean> responseBeans = new ArrayList<>();
+        int from = page * 10;
+        int i = allBlockBeans.size() - from;
+        if (i < 10) {
+            while (i>0){
+                responseBeans.add(allBlockBeans.get(i-1));
+                i--;
+            }
+        } else {
+            for(int j=0;j<10;j++){
+                responseBeans.add(allBlockBeans.get(i-1));
+                i--;
+            }
+        }
+        int size = responseBeans.size();
+        return JsonUtil.toJson(responseBeans);
     }
 
     @Override

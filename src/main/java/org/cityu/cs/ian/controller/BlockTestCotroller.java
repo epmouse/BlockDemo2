@@ -93,11 +93,13 @@ public class BlockTestCotroller {
     public long getTopBlockHeight() {
        return syncBlockService.getTopBlockHeight();
     }
+
     @RequestMapping(value = "syncBlock/blockDetail", method = RequestMethod.GET)
     @ResponseBody
     public String getBlockByHeight(long blockHeight) {
         return syncBlockService.getBlockJsonByHeight(blockHeight);
     }
+
     @RequestMapping(value = "syncBlock/getTransaction", method = RequestMethod.GET)
     @ResponseBody
     public String getTransaction(String transactionid) {
@@ -105,21 +107,12 @@ public class BlockTestCotroller {
 
         return "";
     }
+
     @RequestMapping(value = "syncBlock/all", method = RequestMethod.GET)
     @ResponseBody
     public String getAllBlockForClient(int page) {  //1为最新的10条,依次往下
-        //todo-给客户端提供所有block的json串。（考虑分页）从后往前，先发最新的
-        return "";
+        return syncBlockService.getBlockJsonListByPage(page);
     }
-
-//todo-除以上contrller操作外 还需要做调用下载和获取最高区块的两个接口的操作
-
-
-
-//    1、同步block  下载没有的blcok文件。（1提供下载接口， 2下载并保存）
-//    2、给客户端提供所有block的json串。（考虑分页）从后往前，先发最新的
-//    3、根据transactionid查询这条transactiong的信息 返回 json
-//    4、根据blockheight 查询出对应block  返回json
 
 
 }

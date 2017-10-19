@@ -20,11 +20,10 @@ public interface IBlockModel {
      * 获取新区块文件名称  暂定使用区块高度命名
      * @return
      */
-   int getCurrentBlockName();
+   String getCurrentBlockName();
 
 
-
-
+   Long getTopBlockHeight();
     /**
      * 获取当前链的最后一个区块的hash
      * @return
@@ -36,7 +35,7 @@ public interface IBlockModel {
      *
      * @return
      */
-    int getTotalBlockCount();
+    long getTotalBlockCount();
 
     /**
      * 获取所有区块文件

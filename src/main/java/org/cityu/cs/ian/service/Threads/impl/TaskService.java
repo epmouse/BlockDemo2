@@ -99,7 +99,7 @@ public class TaskService implements ITaskService {
         BlockBean blockBean = new BlockBean();
         List<Transaction1> transactionList = TransactonListOperatorUtils.getTransactionList();
         blockBean.setTransactionCount(transactionList.size());
-        blockBean.setBlockHeight(blockModel.getCurrentBlockName());
+        blockBean.setBlockHeight(blockModel.getTopBlockHeight()+1);
         blockBean.setBlockHeader(getBlockHeader(transactionList, startTime, endTime, lastI, lastHash));
         blockBean.setTransaction1s(transactionList);
         return JsonUtil.toJson(blockBean);

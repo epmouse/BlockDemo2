@@ -12,10 +12,6 @@ import java.util.List;
 
 @Repository
 public class BlockModelImpl implements IBlockModel{
-    /**
-     * 把区块存成文件保存到本地
-     * @param blockJson
-     */
     public boolean saveBlockToLocal(String blockJson) {
         String rootPath = getBlockPath();
         File file = new File(rootPath + "/" + getCurrentBlockName());
@@ -32,21 +28,16 @@ public class BlockModelImpl implements IBlockModel{
         return PropertiesUtil.readValue("config.properties","block.localPath");
     }
 
-    /**
-     * 获取新区块文件名称  暂定使用区块高度命名
-     * @return
-     */
-    public int getCurrentBlockName() {
-        return getTotalBlockCount() + 1;
+    public String getCurrentBlockName() {
+        return (getTotalBlockCount() + 1)+"";
+    }
+
+    @Override
+    public Long getTopBlockHeight() {
+        return getTotalBlockCount();
     }
 
 
-
-
-    /**
-     * 获取当前链的最后一个区块的hash
-     * @return
-     */
     public String getTopBlockHash() {
         File file=null;
         List<File> files = getAllBolckFiles();
@@ -62,23 +53,13 @@ public class BlockModelImpl implements IBlockModel{
         }
         return null;
     }
-
-    /**
-     * 获取当前链的高度
-     *
-     * @return
-     */
-    public int getTotalBlockCount() {
+    public long getTotalBlockCount() {
         List<File> files = getAllBolckFiles();
         if(files!=null&files.size()>0)
             System.out.println(files.get(files.size()-1));
-        return files.size();
+        return (long) files.size();
     }
 
-    /**
-     * 获取所有区块文件
-     * @return
-     */
     public List<File> getAllBolckFiles() {
         return (List<File>) FileUtils.listFiles(new File(getBlockPath()),null,true);
     }

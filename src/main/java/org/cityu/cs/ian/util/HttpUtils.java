@@ -3,8 +3,12 @@ package org.cityu.cs.ian.util;
 
 
 import com.squareup.okhttp.*;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 
@@ -117,4 +121,62 @@ public class HttpUtils {
                 .build();
     }
 
+
+    /**
+     * 请在ui线程调用该方法。
+     * 带进度 下载文件    回调已返回主线程
+     *
+     * @param fileUrl     文件url
+     * @param destFileDir 文件存储路径
+     */
+    public <T> void downLoadFileProgress(String fileUrl, final String fileName, final String destFileDir) {
+
+        File dir = new File(destFileDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        final File file = new File(destFileDir, fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        final Request request = new Request.Builder()
+                .url(fileUrl)
+                .build();
+        final Call call = okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                InputStream is = null;
+                byte[] buf = new byte[2048];
+                int len = 0;
+                FileOutputStream fos = null;
+                try {
+                    is = response.body().byteStream();
+                    fos = new FileOutputStream(file);
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                    fos.flush();
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (is != null) {
+                            is.close();
+                        }
+                        if (fos != null) {
+                            fos.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 }

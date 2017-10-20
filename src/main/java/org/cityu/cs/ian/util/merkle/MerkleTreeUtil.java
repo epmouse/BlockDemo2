@@ -1,29 +1,17 @@
 package org.cityu.cs.ian.util.merkle;
 
 
+import org.cityu.cs.ian.util.SHA256;
+
 import java.util.List;
 
 public class MerkleTreeUtil {
 
-    public static String getRoot(List<String> list){
-        //todo-待获取merkletree
-//        while (true) {
-//
-//                MerkleTree mytree = new MerkleTree(list);
-//                list.clear();
-//                byte[] treeBytes = new Event().getDataAsBytes();
-//                MerkleTree expectedTree = MerkleDeserializer.deserialize(treeBytes);
-//                byte[] myRootSig = mytree.getRoot().sig;
-//                byte[] expectedRootSig = expectedTree.getRoot().sig;
-//                if (!signaturesAreEqual(myRootSig, expectedRootSig)) {
-//                    evaluateTreeDifferences(mytree, expectedTree);
-//                    // ... send alert
-//                }
-//
-//        }
-        return "";
-
+    public static String getRoot(List<String> list) {
+        list.forEach(s -> SHA256.getSHA256StrJava(s));
+        MerkleTree merkleTree = new MerkleTree(list);
+        byte[] serialize = merkleTree.serialize();
+        return SHA256.getSHA256StrJava(new String(serialize));
     }
-
 
 }

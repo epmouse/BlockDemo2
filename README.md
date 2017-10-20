@@ -19,7 +19,7 @@
          "blockHash": "blockhash",
          "nextHash": ""
      },
-     "transaction1s": [
+     "transactions": [
          {
              "transactionId": "0transactionId",
              "from": "0from",

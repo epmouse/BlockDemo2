@@ -5,7 +5,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBean;
-import org.cityu.cs.ian.model.bean.Transaction1;
+import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.util.*;
 import org.cityu.cs.ian.util.PropertiesUtil;
@@ -97,11 +97,11 @@ public class TaskService implements ITaskService {
      */
     private String assemblyBlock(int lastI, long startTime, String lastHash, long endTime) {
         BlockBean blockBean = new BlockBean();
-        List<Transaction1> transactionList = TransactonListOperatorUtils.getTransactionList();
+        List<Transaction> transactionList = TransactonListOperatorUtils.getTransactionList();
         blockBean.setTransactionCount(transactionList.size());
         blockBean.setBlockHeight(blockModel.getTopBlockHeight()+1);
         blockBean.setBlockHeader(getBlockHeader(transactionList, startTime, endTime, lastI, lastHash));
-        blockBean.setTransaction1s(transactionList);
+        blockBean.setTransactions(transactionList);
         return JsonUtil.toJson(blockBean);
     }
 
@@ -110,12 +110,12 @@ public class TaskService implements ITaskService {
      *
      * @return
      */
-    private BlockBean.BlockHeaderBean getBlockHeader(List<Transaction1> transactionList, long startTime, long endTime, int lastI, String lastHash) {
+    private BlockBean.BlockHeaderBean getBlockHeader(List<Transaction> transactionList, long startTime, long endTime, int lastI, String lastHash) {
         BlockBean.BlockHeaderBean blockHeaderBean = new BlockBean.BlockHeaderBean();
         blockHeaderBean.setPreviousHash(blockModel.getTopBlockHash());
         ArrayList<String> transactionJsonList = new ArrayList<>();
-        for (Transaction1 transaction1 : transactionList) {
-            transactionJsonList.add(JsonUtil.toJson(transaction1));
+        for (Transaction transaction : transactionList) {
+            transactionJsonList.add(transaction.getTransactionId());
         }
         blockHeaderBean.setMerkleRoot(MerkleTreeUtil.getRoot(transactionJsonList));
         blockHeaderBean.setTimeStamp(endTime);

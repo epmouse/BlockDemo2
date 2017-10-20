@@ -1,11 +1,11 @@
 package org.cityu.cs.ian.service.Threads;
 
-import org.cityu.cs.ian.model.bean.Transaction1;
+import org.cityu.cs.ian.model.bean.Transaction;
 
 public interface ITransactionService {
 
-    boolean verifySign(Transaction1 json);
+    boolean verifySign(Transaction json);
 
-    void saveTransactionToList(Transaction1 json);
+    void saveTransactionToList(Transaction json);
 
 }

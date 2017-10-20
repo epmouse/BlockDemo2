@@ -1,7 +1,5 @@
 package org.cityu.cs.ian.model.bean;
 
-import org.cityu.cs.ian.model.bean.Transaction1;
-
 import java.util.List;
 
 public class BlockBean {
@@ -17,7 +15,7 @@ public class BlockBean {
     private int transactionCount;
     private long blockHeight;
     private BlockHeaderBean blockHeader;
-    private List<Transaction1> transaction1s;
+    private List<Transaction> transactions;
 
     public int getTransactionCount() {
         return transactionCount;
@@ -43,12 +41,12 @@ public class BlockBean {
         this.blockHeader = blockHeader;
     }
 
-    public List<Transaction1> getTransaction1s() {
-        return transaction1s;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setTransaction1s(List<Transaction1> transaction1s) {
-        this.transaction1s = transaction1s;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     public static class BlockHeaderBean {

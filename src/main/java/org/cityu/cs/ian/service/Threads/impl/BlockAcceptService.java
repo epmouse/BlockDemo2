@@ -1,9 +1,8 @@
 package org.cityu.cs.ian.service.Threads.impl;
 
-import org.cityu.cs.ian.model.BlockModelImpl;
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBean;
-import org.cityu.cs.ian.model.bean.Transaction1;
+import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.IBlockAcceptService;
 import org.cityu.cs.ian.util.JsonUtil;
 import org.cityu.cs.ian.util.SHA256;
@@ -32,10 +31,10 @@ public class BlockAcceptService implements IBlockAcceptService {
     //todo-验证mercalroot 缺少mercleroot的计算
     private boolean verifyMercalroot(BlockBean blockbean) {
         String merkleRoot = blockbean.getBlockHeader().getMerkleRoot();
-        List<Transaction1> transaction1s = blockbean.getTransaction1s();
+        List<Transaction> transactions = blockbean.getTransactions();
         ArrayList<String> transactionJsonList = new ArrayList<>();
-        for(Transaction1 transaction1:transaction1s){
-            transactionJsonList.add(JsonUtil.toJson(transaction1));
+        for(Transaction transaction : transactions){
+            transactionJsonList.add(transaction.getTransactionId());
         }
         String root = MerkleTreeUtil.getRoot(transactionJsonList);
         return root.equals(merkleRoot);

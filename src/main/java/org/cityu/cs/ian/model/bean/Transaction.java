@@ -3,7 +3,7 @@ package org.cityu.cs.ian.model.bean;
 
 import java.util.List;
 
-public class Transaction1 {
+public class Transaction {
     private String transactionId;
     private String from;
     private String to;
@@ -147,7 +147,7 @@ public class Transaction1 {
                 '}';
     }
 
-//    public String signJson(Transaction1 p){
+//    public String signJson(Transaction p){
 //        JSONObject json = new JSONObject();
 //        json.put("transactionId",p.getTransactionId());
 //        json.put("from",p.getFrom());

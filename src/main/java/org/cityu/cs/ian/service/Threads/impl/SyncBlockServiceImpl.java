@@ -2,7 +2,7 @@ package org.cityu.cs.ian.service.Threads.impl;
 
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBean;
-import org.cityu.cs.ian.model.bean.Transaction1;
+import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.util.HttpUtils;
 import org.cityu.cs.ian.util.JsonUtil;
@@ -17,7 +17,6 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Service
 public class SyncBlockServiceImpl implements ISyncBlockService {
@@ -68,11 +67,11 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
         List<BlockBean> allBlockBeans = blockModel.getAllBlockBeans();
         final String[] transactionJson = {""};
         for (int i = 0; i < allBlockBeans.size(); i++) {
-            List<Transaction1> transaction1s = allBlockBeans.get(i).getTransaction1s();
-            for (int j = 0; j < transaction1s.size(); j++) {
-                Transaction1 transaction1 = transaction1s.get(j);
-                if(transaction1.getTransactionId().equals(transactionId)){
-                   transactionJson[0] =JsonUtil.toJson(transaction1);
+            List<Transaction> transactions = allBlockBeans.get(i).getTransactions();
+            for (int j = 0; j < transactions.size(); j++) {
+                Transaction transaction = transactions.get(j);
+                if(transaction.getTransactionId().equals(transactionId)){
+                   transactionJson[0] =JsonUtil.toJson(transaction);
                }
             }
         }

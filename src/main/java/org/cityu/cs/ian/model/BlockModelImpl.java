@@ -48,13 +48,14 @@ public class BlockModelImpl implements IBlockModel {
         List<File> files = getAllBolckFiles();
         if (files != null & files.size() > 0) {
             file = files.get(files.size() - 1);
-        }
-        try {
-            String json = FileUtils.readFileToString(file, "utf-8");
-            BlockBean blockBean = JsonUtil.fromJson(json, BlockBean.class);
-            return blockBean.getBlockHeader().getBlockHash();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                String json = FileUtils.readFileToString(file, "utf-8");
+                BlockBean blockBean = JsonUtil.fromJson(json, BlockBean.class);
+                return blockBean.getBlockHeader().getBlockHash();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return null;
     }
@@ -71,18 +72,19 @@ public class BlockModelImpl implements IBlockModel {
     public List<File> getAllBolckFiles() {
         return (List<File>) FileUtils.listFiles(new File(getBlockPath()), null, true);
     }
+
     @Override
     public List<BlockBean> getAllBlockBeans() {
-        List<File> allBolckFiles = getAllBolckFiles();
-        List<BlockBean> blockBeans = new ArrayList<>();
         try {
+            List<File> allBolckFiles = getAllBolckFiles();
+            List<BlockBean> blockBeans = new ArrayList<>();
             for (File file : allBolckFiles) {
                 String json = null;
                 json = FileUtils.readFileToString(file, "utf-8");
                 blockBeans.add(JsonUtil.fromJson(json, BlockBean.class));
             }
             return blockBeans;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

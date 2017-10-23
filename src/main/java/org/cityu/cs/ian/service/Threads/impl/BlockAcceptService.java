@@ -42,7 +42,7 @@ public class BlockAcceptService implements IBlockAcceptService {
 
     //验证previoushash
     private boolean verifyPreviousHash(BlockBean.BlockHeaderBean blockHeader) {
-        String topBlockHash = blockModel.getTopBlockHash();
+        String topBlockHash = blockModel.getTopBlockHash()==null?"":blockModel.getTopBlockHash();
         String previousHash = blockHeader.getPreviousHash();
         return previousHash.equals(topBlockHash);
     }

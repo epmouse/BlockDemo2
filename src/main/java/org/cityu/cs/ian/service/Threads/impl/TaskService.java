@@ -35,7 +35,7 @@ public class TaskService implements ITaskService {
     }
 
     public void calculateByFor(String hash, int i, long naclTime) {
-        while (!"0000000".equals(hash.substring(0, 7)) && !isInterrupt) {
+        while (!"000000".equals(hash.substring(0, 6)) && !isInterrupt) {
             i++;
             hash = SHA256.getSHA256StrJava(TaskService.BASENACL + naclTime + i);
         }
@@ -112,7 +112,7 @@ public class TaskService implements ITaskService {
      */
     private BlockBean.BlockHeaderBean getBlockHeader(List<Transaction> transactionList, long startTime, long endTime, int lastI, String lastHash) {
         BlockBean.BlockHeaderBean blockHeaderBean = new BlockBean.BlockHeaderBean();
-        blockHeaderBean.setPreviousHash(blockModel.getTopBlockHash());
+        blockHeaderBean.setPreviousHash(blockModel.getTopBlockHash()==null?"":blockModel.getTopBlockHash());
         ArrayList<String> transactionJsonList = new ArrayList<>();
         for (Transaction transaction : transactionList) {
             transactionJsonList.add(transaction.getTransactionId());

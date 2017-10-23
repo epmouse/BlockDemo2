@@ -147,7 +147,11 @@ public class Transaction {
                 '}';
     }
 
-//    public String signJson(Transaction p){
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+    //    public String signJson(Transaction p){
 //        JSONObject json = new JSONObject();
 //        json.put("transactionId",p.getTransactionId());
 //        json.put("from",p.getFrom());

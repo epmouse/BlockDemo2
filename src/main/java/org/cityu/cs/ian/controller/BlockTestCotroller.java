@@ -38,7 +38,7 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     public void init() {
         taskService.powCalculate();//初始化触发计算
-        syncBlockService.downloadBlock();
+//        syncBlockService.downloadBlock();
     }
 
     @RequestMapping(value = "add/transaction", method = RequestMethod.POST)

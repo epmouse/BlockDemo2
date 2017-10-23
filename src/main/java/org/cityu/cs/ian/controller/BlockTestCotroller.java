@@ -7,7 +7,7 @@ import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.service.Threads.ITransactionService;
 import org.cityu.cs.ian.util.Constant;
-import org.cityu.cs.ian.util.PropertiesUtil;
+import org.cityu.cs.ian.util.MyPathUtils;
 import org.cityu.cs.ian.util.ResponseMsgUtils;
 import org.cityu.cs.ian.util.unuse.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("block")
 public class BlockTestCotroller {
+
     @Autowired
     private ITaskService taskService;
     @Autowired
@@ -37,7 +38,7 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     public void init() {
         taskService.powCalculate();//初始化触发计算
-//        syncBlockService.downloadBlock();
+        syncBlockService.downloadBlock();
     }
 
     @RequestMapping(value = "add/transaction", method = RequestMethod.POST)
@@ -73,13 +74,10 @@ public class BlockTestCotroller {
         if (StringUtil.issNullorEmpty(blockName)) {
             return Constant.ERR_RESPONSE;
         }
-        if (blockName != null) {
-            String blockFolderPath = PropertiesUtil.readValue("config.properties", "block.localPath");
-            File file = new File(blockFolderPath + "/" + blockName);
-            if (file.exists()) {
-                syncBlockService.toDownload(mResponse, blockName, file);
-                return Constant.SUCCESS_RESPONSE;
-            }
+        if (!StringUtil.issNullorEmpty(blockName)) {
+            String blockHome = MyPathUtils.getBlockHome();
+            syncBlockService.toDownload(mResponse, blockName, new File(blockHome));
+            return Constant.SUCCESS_RESPONSE;
         }
         return Constant.ERR_RESPONSE;
     }

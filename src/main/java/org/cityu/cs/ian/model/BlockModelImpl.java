@@ -3,7 +3,7 @@ package org.cityu.cs.ian.model;
 import org.apache.commons.io.FileUtils;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.util.JsonUtil;
-import org.cityu.cs.ian.util.PropertiesUtil;
+import org.cityu.cs.ian.util.MyPathUtils;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -28,7 +28,8 @@ public class BlockModelImpl implements IBlockModel {
 
     @Override
     public String getBlockPath() {
-        return PropertiesUtil.readValue("config.properties", "block.localPath");
+//        return PropertiesUtil.readValue("config.properties", "block.localPath");
+        return MyPathUtils.getBlockHome();
     }
 
     @Override

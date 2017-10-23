@@ -3,26 +3,22 @@ package org.cityu.cs.ian.test;
 
 import org.cityu.cs.ian.model.BlockModelImpl;
 import org.cityu.cs.ian.model.bean.BlockBean;
+import org.cityu.cs.ian.model.bean.SignTransaction;
 import org.cityu.cs.ian.model.bean.Transaction;
-import org.cityu.cs.ian.service.Threads.impl.TaskService;
 import org.cityu.cs.ian.util.JsonUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:spring-core-test.xml"})
 public class MyTest {
-    @Autowired
-    TaskService taskService;
 
     @Before
     public void init() {
@@ -34,18 +30,78 @@ public class MyTest {
         //在测试完成之后的业务代码
     }
 
-    String hash = "aaaaaaaaaaaaaaa";
 
-    @Test
-    public void test1() {
-        taskService.powCalculate();
+
+//    @Test
+//    public void test2() {
+//        System.out.println(signJson());
+////        System.out.println(signJson1());
+//        System.out.println(signJson3());
+//        assert signJson().equals(signJson3());
+//
+//    }
+//    public String signJson3() {
+//        JsonObject json =new JsonObject();
+//        json.addProperty("transactionId", "transactionId");
+//        json.addProperty("from", "from");
+//        json.addProperty("to", "to");
+//        json.addProperty("fromPubkey", "fromPubkey");
+//        json.addProperty("toPubkey", "toPubkey");
+////        json.put("data", p.getData());
+//        json.addProperty("include", "include");
+//        json.addProperty("total", "total");
+//        json.addProperty("link", "link");
+//        return json.toString();
+//    }
+//public String signJson3() {
+//    JSONObject json = new JSONObject();
+//    json.put("transactionId","transactionId");
+//    json.put("from","from");
+//    json.put("to", "to");
+//    json.put("fromPubkey", "fromPubkey");
+//    json.put("toPubkey", "toPubkey");
+////        json.put("data", p.getData());
+//    json.put("include", "include");
+//    json.put("total", "total");
+//    json.put("link", "link");
+//    return json.toJSONString();
+//}
+    public String signJson() {
+        SignTransaction signTransaction = new SignTransaction();
+        signTransaction.setTransactionId("transactionId");
+        signTransaction.setFrom("from");
+        signTransaction.setTo("to");
+        signTransaction.setFromPubkey("fromPubkey");
+        signTransaction.setToPubkey("toPubkey");
+        signTransaction.setInclude("include");
+        signTransaction.setTotal("total");
+        signTransaction.setLink("link");
+        return JsonUtil.toJson(signTransaction);
     }
+    public String signJson1() {
+        LinkedHashMap<String, String> stringStringLinkedHashMap = new LinkedHashMap<>();
+        stringStringLinkedHashMap.put("transactionId","transactionId");
+        stringStringLinkedHashMap.put("from","from");
+        stringStringLinkedHashMap.put("to","to");
+        stringStringLinkedHashMap.put("fromPubkey","fromPubkey");
+        stringStringLinkedHashMap.put("toPubkey","toPubkey");
+        stringStringLinkedHashMap.put("include","include");
+        stringStringLinkedHashMap.put("total","total");
+        stringStringLinkedHashMap.put("link","link");
+        return JsonUtil.toJson(stringStringLinkedHashMap);
+    }
+    public String signJson2() {
 
-    @Test
-    public void test2() {
-
-
-
+        Map<String, String> stringStringLinkedHashMap = new HashMap<>();
+        stringStringLinkedHashMap.put("transactionId","transactionId");
+        stringStringLinkedHashMap.put("from","from");
+        stringStringLinkedHashMap.put("to","to");
+        stringStringLinkedHashMap.put("fromPubkey","fromPubkey");
+        stringStringLinkedHashMap.put("toPubkey","toPubkey");
+        stringStringLinkedHashMap.put("include","include");
+        stringStringLinkedHashMap.put("total","total");
+        stringStringLinkedHashMap.put("link","link");
+        return JsonUtil.toJson(stringStringLinkedHashMap);
     }
 
     @Test

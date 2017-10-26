@@ -35,7 +35,7 @@ public class TaskService implements ITaskService {
     }
 
     public void calculateByFor(String hash, int i, long naclTime) {
-        while (!"000000".equals(hash.substring(0, 6)) && !isInterrupt) {
+        while (!"00000000".equals(hash.substring(0, 8)) && !isInterrupt) {
             i++;
             hash = SHA256.getSHA256StrJava(TaskService.BASENACL + naclTime + i);
         }

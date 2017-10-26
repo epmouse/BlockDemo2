@@ -49,9 +49,9 @@ public class BlockTestCotroller {
     @RequestMapping(value = "add/transaction", method = RequestMethod.POST)
     @ResponseBody
     public String transactionAccept(@RequestBody Transaction transaction) {
+        if(transactionService.isRepetition(transaction)) return  Constant.ERR_RESPONSE;
         if (transactionService.verifySign(transaction)) {
-            transactionService.saveTransactionToList(transaction);
-            return Constant.SUCCESS_RESPONSE;
+          return transactionService.saveTransactionToList(transaction)?Constant.SUCCESS_RESPONSE:Constant.ERR_RESPONSE;
         }
         return Constant.ERR_RESPONSE;
     }

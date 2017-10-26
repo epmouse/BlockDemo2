@@ -24,10 +24,18 @@ public class TransactonListOperatorUtils {
 
     /**
      * 把新接收的transaction 添加到缓存集合中
+     * 不能重复添加，此处去当前区块计算期间的重复元素
      * @param transaction
      * @return
      */
     public synchronized static boolean addTransaction(Transaction transaction) {
-        return transactionList.add(transaction);
+        boolean flag[] ={true};
+        transactionList.forEach(transaction1 -> {
+            if(transaction.getTransactionId().equals(transaction1.getTransactionId())){
+                flag[0]=false;
+            }
+        });
+        if(flag[0]) transactionList.add(transaction);
+        return flag[0];
     }
 }

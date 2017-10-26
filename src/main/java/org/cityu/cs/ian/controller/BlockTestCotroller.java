@@ -38,9 +38,14 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     public void init() {
         taskService.powCalculate();//初始化触发计算
+        System.out.println();
 //        syncBlockService.downloadBlock();
     }
-
+    @RequestMapping("test/{device}")
+    @ResponseBody
+    public String test(@PathVariable("device") String device){
+        return "{\"versionCode\":\"1.0.3\"}";
+    }
     @RequestMapping(value = "add/transaction", method = RequestMethod.POST)
     @ResponseBody
     public String transactionAccept(@RequestBody Transaction transaction) {

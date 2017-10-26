@@ -25,10 +25,19 @@ public class BlockAcceptService implements IBlockAcceptService {
         boolean b = verifyBlockhash(blockHeader);
         boolean b1 = verifyPreviousHash(blockHeader);
         boolean b2 = verifyMercalroot(blockBean);
-        return b&&b1&&b2;
+        boolean b3 = verifyBlockHeight(blockBean);
+        return b&&b1&&b2&&b3;
+    }
+    //验证区块高度
+    private boolean verifyBlockHeight(BlockBean blockBean) {
+        long topBlockHeight = blockModel.getTopBlockHeight();
+        if(topBlockHeight< blockBean.getBlockHeight()){
+            return true;
+        }
+        return false;
     }
 
-    //todo-验证mercalroot 缺少mercleroot的计算
+
     private boolean verifyMercalroot(BlockBean blockbean) {
         String merkleRoot = blockbean.getBlockHeader().getMerkleRoot();
         List<Transaction> transactions = blockbean.getTransactions();

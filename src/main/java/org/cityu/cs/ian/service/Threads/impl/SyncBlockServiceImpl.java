@@ -1,6 +1,7 @@
 package org.cityu.cs.ian.service.Threads.impl;
 
 import org.cityu.cs.ian.model.IBlockModel;
+import org.cityu.cs.ian.model.bean.BlockBackBean;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
@@ -98,8 +99,10 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
                 i--;
             }
         }
-        int size = responseBeans.size();
-        return JsonUtil.toJson(responseBeans);
+        BlockBackBean blockBackBean = new BlockBackBean();
+        blockBackBean.setBlockBeans(responseBeans);
+        blockBackBean.setBlockTotalCount(blockModel.getTotalBlockCount());
+        return JsonUtil.toJson(blockBackBean);
     }
 
     @Override

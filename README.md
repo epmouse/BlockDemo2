@@ -139,6 +139,99 @@
       * params   page  值从0开始，返回区块从末尾开始，每页10条 
       * 请求方式  Get请求
       * 返回：jsonarray  里面jsonobject为  1 中 json串。
+      
+      ```
+      {
+          "blockTotalCount": 16,
+          "blockBeans": [
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 14,
+                  "blockHeader": {
+                      "previousHash": "000000d2d7b9c49676de26f174f687b10ab58a27a97298deac8d2e64a3287e65",
+                      "merkleRoot": "",
+                      "timeStamp": 1508998730780,
+                      "randomTime": 1508998674329,
+                      "nonce": "11169791",
+                      "blockHash": "00000014ccf11616149c6421189218a3a81ded23042e4cca091c3907e32900dc"
+                  },
+                  "transactions": []
+              },
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 13,
+                  "blockHeader": {
+                      "previousHash": "000000d2d7b9c49676de26f174f687b10ab58a27a97298deac8d2e64a3287e65",
+                      "merkleRoot": "",
+                      "timeStamp": 1508998687478,
+                      "randomTime": 1508998641820,
+                      "nonce": "8974953",
+                      "blockHash": "000000e3ed9df0def3ed540558304d9f6e63eff0a2b19aa835c30e86b7166942"
+                  },
+                  "transactions": []
+              },
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 12,
+                  "blockHeader": {
+                      "previousHash": "000000d2d7b9c49676de26f174f687b10ab58a27a97298deac8d2e64a3287e65",
+                      "merkleRoot": "",
+                      "timeStamp": 1508998674317,
+                      "randomTime": 1508998665650,
+                      "nonce": "1811328",
+                      "blockHash": "000000bbd298868cd952a2dc08e9077221b24bd649aef63aa3644b0a41233a07"
+                  },
+                  "transactions": []
+              },
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 11,
+                  "blockHeader": {
+                      "previousHash": "000000d2d7b9c49676de26f174f687b10ab58a27a97298deac8d2e64a3287e65",
+                      "merkleRoot": "",
+                      "timeStamp": 1508998665635,
+                      "randomTime": 1508998634753,
+                      "nonce": "5813862",
+                      "blockHash": "00000049ad48246611c7d90c61bd1d8f07d2cdd5b433981b1a7a1fa7c17dcdf6"
+                  },
+                  "transactions": []
+              },
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 10,
+                  "blockHeader": {
+                      "previousHash": "000000d2d7b9c49676de26f174f687b10ab58a27a97298deac8d2e64a3287e65",
+                      "merkleRoot": "",
+                      "timeStamp": 1508998641788,
+                      "randomTime": 1508998484014,
+                      "nonce": "31681889",
+                      "blockHash": "00000006048299ef7f8c87437d9eef5b98b6e7585479ffcf7a3ec9c29e14d8dd"
+                  },
+                  "transactions": []
+              },
+              {
+                  "transactionCount": 0,
+                  "blockHeight": 1,
+                  "blockHeader": {
+                      "previousHash": "",
+                      "merkleRoot": "",
+                      "timeStamp": 1508933670380,
+                      "randomTime": 1508933605642,
+                      "nonce": "14496959",
+                      "blockHash": "000000b1d80612182fccc11ebe3d702effde7a780b9b3289873a59a09c4eec81"
+                  },
+                  "transactions": []
+              }
+          ]
+      }
+      ```
+      
+      
+      
+      
+      
+      
+      
     
 #### 3、通过transactionId查找transaction
       * url  baseUrl+block/syncBlock/getTransaction

@@ -35,7 +35,7 @@ public class TaskService implements ITaskService {
     }
 
     public void calculateByFor(String hash, int i, long naclTime) {
-        while (!"00000000".equals(hash.substring(0, 8)) && !isInterrupt) {
+        while (!"0000000".equals(hash.substring(0, 7)) && !isInterrupt) {
             i++;
             hash = SHA256.getSHA256StrJava(TaskService.BASENACL + naclTime + i);
         }
@@ -55,6 +55,7 @@ public class TaskService implements ITaskService {
         String blockJson = assemblyBlock(lastI, startTime, lastHash, endTime);
         boolean b = blockModel.saveBlockToLocal(blockJson);
         if (b) {
+            System.out.println("区块计算完成，当前区块hash为"+lastHash);
             postBlock(blockJson);
             powCalculate();//新区块计算开始
         }else {

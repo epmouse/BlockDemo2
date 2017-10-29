@@ -6,6 +6,7 @@ import org.cityu.cs.ian.service.Threads.IBlockAcceptService;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.service.Threads.ITransactionService;
+import org.cityu.cs.ian.service.Threads.impl.TaskService;
 import org.cityu.cs.ian.util.Constant;
 import org.cityu.cs.ian.util.MyPathUtils;
 import org.cityu.cs.ian.util.ResponseMsgUtils;
@@ -36,16 +37,17 @@ public class BlockTestCotroller {
      * 初始化接口
      */
     @RequestMapping("init")
-    public void init() {
-        taskService.powCalculate();//初始化触发计算
-        System.out.println();
-//        syncBlockService.downloadBlock();
-    }
-    @RequestMapping("test/{device}")
     @ResponseBody
-    public String test(@PathVariable("device") String device){
-        return "{\"versionCode\":\"1.0.3\"}";
+    public String init() {
+        taskService.powCalculate();//初始化触发计算
+        return Constant.SUCCESS_RESPONSE;
     }
+    @RequestMapping("cut")
+    public void cut() {
+        TaskService.isInterrupt=true;
+    }
+
+
     @RequestMapping(value = "add/transaction", method = RequestMethod.POST)
     @ResponseBody
     public String transactionAccept(@RequestBody Transaction transaction) {

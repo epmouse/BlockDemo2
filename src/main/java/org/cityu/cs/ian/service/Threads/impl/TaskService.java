@@ -29,6 +29,7 @@ public class TaskService implements ITaskService {
     @Override
     @Async
     public void powCalculate() {
+        isInterrupt=false;
         final long naclTime = System.currentTimeMillis();//当前时间计算出来放入json，验证用
         int i = 0;
         calculateByFor(BASENACL, i, naclTime);

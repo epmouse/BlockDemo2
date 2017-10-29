@@ -24,7 +24,6 @@ public class SHA256 {
         }
         return encodeStr;
     }
-
     /**
      * 将byte转为16进制
      * @param bytes

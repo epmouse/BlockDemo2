@@ -83,6 +83,7 @@ public class BlockModelImpl implements IBlockModel {
                 json = FileUtils.readFileToString(file, "utf-8");
                 blockBeans.add(JsonUtil.fromJson(json, BlockBean.class));
             }
+            blockBeans.sort((o1, o2) -> (int) (o1.getBlockHeight() - o2.getBlockHeight()));
             return blockBeans;
         } catch (Exception e) {
             e.printStackTrace();

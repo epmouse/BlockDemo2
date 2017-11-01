@@ -40,10 +40,9 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     @ResponseBody
     public String init() {
-//        syncBlockService.downloadBlock();
+        syncBlockService.downloadBlock();
         TaskService.isStop=false;
         taskService.powCalculate();//初始化触发计算
-
         return Constant.SUCCESS_RESPONSE;
     }
     @RequestMapping("cut")
@@ -88,7 +87,7 @@ public class BlockTestCotroller {
         }
         if (!StringUtil.issNullorEmpty(blockName)) {
             String blockHome = MyPathUtils.getBlockHome();
-            syncBlockService.toDownload(mResponse, blockName, new File(blockHome));
+            syncBlockService.toDownload(mResponse, blockName, new File(blockHome+"/"+blockName));
 //            return Constant.SUCCESS_RESPONSE;
         }
 //        return Constant.ERR_RESPONSE;

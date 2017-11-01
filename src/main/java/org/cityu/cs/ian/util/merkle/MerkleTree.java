@@ -139,9 +139,9 @@ public class MerkleTree {
    * @param signatures
    */
   void constructTree(List<String> signatures) {
-    if (signatures.size() <= 1) {
-      throw new IllegalArgumentException("Must be at least two signatures to construct a Merkle tree");
-    }
+//    if (signatures.size() <= 1) {
+//      throw new IllegalArgumentException("Must be at least two signatures to construct a Merkle tree");
+//    }
     
     leafSigs = signatures;
     nnodes = signatures.size();

@@ -35,43 +35,56 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
     @Autowired
     private ITaskService taskService;
     /**
-     *记录所有的下载线程是否完成
+     * 记录所有的下载线程是否完成
      */
-    public static AtomicInteger integer=new AtomicInteger(0);
+    public static AtomicInteger integer = new AtomicInteger(0);
+
     @Override
     public void downloadBlock() {
         String containAllBlcokServerUrl = PropertiesUtil.readValue("config.properties", "containAllBlcokServerUrl");
-        if (!containAllBlcokServerUrl.contains("http://")) return;
-        String s = HttpUtils.getInstance().requestByGetSync(containAllBlcokServerUrl + "/block/syncBlock/Highest");
-        if (StringUtil.issNullorEmpty(s)) {
-            return;
-        }
+        long blockHeight = getHeighestBlock(containAllBlcokServerUrl);
+        if (blockHeight < 0) return;
         try {
-            long blockHeight = new LongStringConverter().fromString(s);
             long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
-            int count= (int) (blockHeight-currentServerTopBlockHeight);
+            int count = (int) (blockHeight - currentServerTopBlockHeight);
             isInit.getAndSet(true);//开始下载时改变该值，说明已经init。
-            for (int i =(int) currentServerTopBlockHeight+1; i <= (int)blockHeight; i++) {
 
+            if (count <= 0) {
+                taskService.powCalculate();
+                return;
+            }
+            for (int i = (int) currentServerTopBlockHeight + 1; i <= (int) blockHeight; i++) {
                 HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i,
                         String.valueOf(i),
                         blockModel.getBlockPath(),
                         () -> integer.getAndIncrement()
                 );
             }
-            boolean stopListener=true;
-            while (stopListener){
-                if(integer.get()==count){
-                    stopListener=false;
-                    taskService.powCalculate();
+            boolean stopListener = true;
+            while (stopListener) {
+                if (integer.get() == count) {
+                    stopListener = false;
+                    downloadBlock();
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //获取总server上的最高区块高度
+    private long getHeighestBlock(String containAllBlcokServerUrl) {
+        if (!containAllBlcokServerUrl.contains("http://")) return -1;
+        String s = HttpUtils.getInstance().requestByGetSync(containAllBlcokServerUrl + "/block/syncBlock/Highest");
+        try {
+            if (!StringUtil.issNullorEmpty(s)) {
+                return new LongStringConverter().fromString(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
     @Override
     public void getBlockFileByName(String blockName) {

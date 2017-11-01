@@ -42,7 +42,7 @@ public class BlockTestCotroller {
     public String init() {
         syncBlockService.downloadBlock();
         TaskService.isStop=false;
-        taskService.powCalculate();//初始化触发计算
+//        taskService.powCalculate();//初始化触发计算
         return Constant.SUCCESS_RESPONSE;
     }
     @RequestMapping("cut")

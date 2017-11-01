@@ -44,7 +44,7 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
             long blockHeight = new LongStringConverter().fromString(s);
             long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
             int count= (int) (blockHeight-currentServerTopBlockHeight);
-            for (int i = currentServerTopBlockHeight==0?(int) currentServerTopBlockHeight:(int) currentServerTopBlockHeight+1; i <= (int)blockHeight; i++) {
+            for (int i =(int) currentServerTopBlockHeight+1; i <= (int)blockHeight; i++) {
 
                 HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i,
                         String.valueOf(i),

@@ -44,19 +44,16 @@ public class BlockModelImpl implements IBlockModel {
 
     @Override
     public String getTopBlockHash() {
-        File file = null;
-        List<File> files = getAllBolckFiles();
-        if (files != null & files.size() > 0) {
-            file = files.get(files.size() - 1);
-            try {
-                String json = FileUtils.readFileToString(file, "utf-8");
-                BlockBean blockBean = JsonUtil.fromJson(json, BlockBean.class);
-                String blockHash = blockBean.getBlockHeader().getBlockHash();
-                return blockHash;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+        String pathname = MyPathUtils.getBlockHome() + "/" + getTotalBlockCount();
+        try {
+            File file = new File(pathname);
+            if (file.exists()) {
+                String s = FileUtils.readFileToString(file, "utf-8");
+                BlockBean blockBean = JsonUtil.fromJson(s, BlockBean.class);
+                return blockBean.getBlockHeader().getBlockHash();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -65,8 +62,8 @@ public class BlockModelImpl implements IBlockModel {
     public long getTotalBlockCount() {
         List<File> files = getAllBolckFiles();
         if (files != null & files.size() > 0)
-            System.out.println(files.get(files.size() - 1));
-        return (long) files.size();
+            return (long) files.size();
+        else return (long) 0;
     }
 
     @Override
@@ -80,8 +77,7 @@ public class BlockModelImpl implements IBlockModel {
             List<File> allBolckFiles = getAllBolckFiles();
             List<BlockBean> blockBeans = new ArrayList<>();
             for (File file : allBolckFiles) {
-                String json = null;
-                json = FileUtils.readFileToString(file, "utf-8");
+                String json = FileUtils.readFileToString(file, "utf-8");
                 blockBeans.add(JsonUtil.fromJson(json, BlockBean.class));
             }
             blockBeans.sort((o1, o2) -> (int) (o1.getBlockHeight() - o2.getBlockHeight()));

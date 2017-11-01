@@ -71,6 +71,7 @@ public class BlockAcceptService implements IBlockAcceptService {
 
     @Override
     public boolean saveBlock(BlockBean blockBean) {
+        if(!SyncBlockServiceImpl.isInit.get()) return false;
         return blockModel.saveBlockToLocal(JsonUtil.toJson(blockBean));
 
     }

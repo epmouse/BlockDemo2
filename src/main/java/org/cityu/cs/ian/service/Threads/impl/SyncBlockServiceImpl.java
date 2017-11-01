@@ -20,10 +20,16 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SyncBlockServiceImpl implements ISyncBlockService {
+    /**
+     * 只有该server开始下载了才可以接受区块保存到本地，否则会重复，比如在该server刚启动还未init的时候如果接收到post的block
+     * 它在init的时候又会重新下载一次
+     */
+    public static AtomicBoolean isInit = new AtomicBoolean(false);
     @Autowired
     private IBlockModel blockModel;
     @Autowired
@@ -44,6 +50,7 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
             long blockHeight = new LongStringConverter().fromString(s);
             long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
             int count= (int) (blockHeight-currentServerTopBlockHeight);
+            isInit.getAndSet(true);//开始下载时改变该值，说明已经init。
             for (int i =(int) currentServerTopBlockHeight+1; i <= (int)blockHeight; i++) {
 
                 HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i,

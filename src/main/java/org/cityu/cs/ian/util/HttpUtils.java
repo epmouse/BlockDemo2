@@ -3,7 +3,6 @@ package org.cityu.cs.ian.util;
 
 
 import com.squareup.okhttp.*;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -129,7 +128,7 @@ public class HttpUtils {
      * @param fileUrl     文件url
      * @param destFileDir 文件存储路径
      */
-    public <T> void downLoadFileProgress(String fileUrl, final String fileName, final String destFileDir) {
+    public <T> void downLoadFileProgress(String fileUrl, final String fileName, final String destFileDir,MyHttpCallBack callBack) {
 
         File dir = new File(destFileDir);
         if (!dir.exists()) {
@@ -151,8 +150,9 @@ public class HttpUtils {
 
             @Override
             public void onResponse(Response response) throws IOException {
+                System.out.println("当前线程id为"+Thread.currentThread().getId());
                 InputStream is = null;
-                byte[] buf = new byte[2048];
+                byte[] buf = new byte[1024];
                 int len = 0;
                 FileOutputStream fos = null;
                 try {
@@ -162,6 +162,7 @@ public class HttpUtils {
                         fos.write(buf, 0, len);
                     }
                     fos.flush();
+                    callBack.onSuccess();
                 } catch (final IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -178,5 +179,9 @@ public class HttpUtils {
                 }
             }
         });
+    }
+
+    public interface MyHttpCallBack{
+        void onSuccess();
     }
 }

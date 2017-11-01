@@ -1,5 +1,6 @@
 package org.cityu.cs.ian.controller;
 
+import javafx.util.converter.LongStringConverter;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.IBlockAcceptService;
@@ -39,7 +40,10 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     @ResponseBody
     public String init() {
+//        syncBlockService.downloadBlock();
+        TaskService.isStop=false;
         taskService.powCalculate();//初始化触发计算
+
         return Constant.SUCCESS_RESPONSE;
     }
     @RequestMapping("cut")
@@ -77,16 +81,17 @@ public class BlockTestCotroller {
 
     @RequestMapping(value = "syncBlock/{blockName}", method = RequestMethod.GET)
     @ResponseBody
-    public String syncBlocks(@PathVariable("blockName") String blockName, HttpServletResponse mResponse) {
+    public void syncBlocks(@PathVariable("blockName") String blockName, HttpServletResponse mResponse) {
         if (StringUtil.issNullorEmpty(blockName)) {
-            return Constant.ERR_RESPONSE;
+//            return Constant.ERR_RESPONSE;
+            return;
         }
         if (!StringUtil.issNullorEmpty(blockName)) {
             String blockHome = MyPathUtils.getBlockHome();
             syncBlockService.toDownload(mResponse, blockName, new File(blockHome));
-            return Constant.SUCCESS_RESPONSE;
+//            return Constant.SUCCESS_RESPONSE;
         }
-        return Constant.ERR_RESPONSE;
+//        return Constant.ERR_RESPONSE;
     }
 
     /**
@@ -96,8 +101,10 @@ public class BlockTestCotroller {
      */
     @RequestMapping(value = "syncBlock/Highest", method = RequestMethod.GET)
     @ResponseBody
-    public long getTopBlockHeight() {
-        return syncBlockService.getTopBlockHeight();
+    public String getTopBlockHeight() {
+        long topBlockHeight = syncBlockService.getTopBlockHeight();
+        System.out.println(topBlockHeight);
+        return new LongStringConverter().toString(topBlockHeight);
     }
 
     @RequestMapping(value = "syncBlock/blockDetail", method = RequestMethod.GET)

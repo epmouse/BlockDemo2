@@ -51,7 +51,8 @@ public class BlockModelImpl implements IBlockModel {
             try {
                 String json = FileUtils.readFileToString(file, "utf-8");
                 BlockBean blockBean = JsonUtil.fromJson(json, BlockBean.class);
-                return blockBean.getBlockHeader().getBlockHash();
+                String blockHash = blockBean.getBlockHeader().getBlockHash();
+                return blockHash;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

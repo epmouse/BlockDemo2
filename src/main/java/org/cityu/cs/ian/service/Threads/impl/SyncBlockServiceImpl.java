@@ -1,10 +1,12 @@
 package org.cityu.cs.ian.service.Threads.impl;
 
+import javafx.util.converter.LongStringConverter;
 import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBackBean;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
+import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.util.HttpUtils;
 import org.cityu.cs.ian.util.JsonUtil;
 import org.cityu.cs.ian.util.PropertiesUtil;
@@ -18,25 +20,51 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SyncBlockServiceImpl implements ISyncBlockService {
     @Autowired
     private IBlockModel blockModel;
-
+    @Autowired
+    private ITaskService taskService;
+    /**
+     *记录所有的下载线程是否完成
+     */
+    public static AtomicInteger integer=new AtomicInteger(0);
     @Override
     public void downloadBlock() {
         String containAllBlcokServerUrl = PropertiesUtil.readValue("config.properties", "containAllBlcokServerUrl");
+        if (!containAllBlcokServerUrl.contains("http://")) return;
         String s = HttpUtils.getInstance().requestByGetSync(containAllBlcokServerUrl + "/block/syncBlock/Highest");
         if (StringUtil.issNullorEmpty(s)) {
             return;
         }
-        long blockHeight = Long.valueOf(s);
-        long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
-        for (long i = blockHeight; i <= currentServerTopBlockHeight; i++) {
-            HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i, String.valueOf(i), blockModel.getBlockPath());
+        try {
+            long blockHeight = new LongStringConverter().fromString(s);
+            long currentServerTopBlockHeight = blockModel.getTopBlockHeight();
+            int count= (int) (blockHeight-currentServerTopBlockHeight);
+            for (int i = currentServerTopBlockHeight==0?(int) currentServerTopBlockHeight:(int) currentServerTopBlockHeight+1; i <= (int)blockHeight; i++) {
+
+                HttpUtils.getInstance().downLoadFileProgress(containAllBlcokServerUrl + "/block/syncBlock/" + i,
+                        String.valueOf(i),
+                        blockModel.getBlockPath(),
+                        () -> integer.getAndIncrement()
+                );
+            }
+            boolean stopListener=true;
+            while (stopListener){
+                if(integer.get()==count){
+                    stopListener=false;
+                    taskService.powCalculate();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 
     @Override
     public void getBlockFileByName(String blockName) {
@@ -71,9 +99,9 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
             List<Transaction> transactions = allBlockBeans.get(i).getTransactions();
             for (int j = 0; j < transactions.size(); j++) {
                 Transaction transaction = transactions.get(j);
-                if(transaction.getTransactionId().equals(transactionId)){
-                   transactionJson[0] =JsonUtil.toJson(transaction);
-               }
+                if (transaction.getTransactionId().equals(transactionId)) {
+                    transactionJson[0] = JsonUtil.toJson(transaction);
+                }
             }
         }
         return transactionJson[0];

@@ -8,7 +8,6 @@ import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.util.*;
-import org.cityu.cs.ian.util.PropertiesUtil;
 import org.cityu.cs.ian.util.merkle.MerkleTreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -25,18 +24,20 @@ public class TaskService implements ITaskService {
 
     public volatile static boolean isInterrupt;
     public final static String BASENACL = "This is first block";
+    public volatile static boolean isStop;
 
     @Override
     @Async
     public void powCalculate() {
-        isInterrupt=false;
+        isInterrupt = false;
         final long naclTime = System.currentTimeMillis();//当前时间计算出来放入json，验证用
         int i = 0;
-        calculateByFor(BASENACL, i, naclTime);
+        if (!isStop)
+            calculateByFor(BASENACL, i, naclTime);
     }
 
     public void calculateByFor(String hash, int i, long naclTime) {
-        while (!"0000000".equals(hash.substring(0, 7)) && !isInterrupt) {
+        while (!"000000".equals(hash.substring(0, 6)) && !isInterrupt) {
             i++;
             hash = SHA256.getSHA256StrJava(TaskService.BASENACL + naclTime + i);
         }
@@ -56,10 +57,10 @@ public class TaskService implements ITaskService {
         String blockJson = assemblyBlock(lastI, startTime, lastHash, endTime);
         boolean b = blockModel.saveBlockToLocal(blockJson);
         if (b) {
-            System.out.println("区块计算完成，当前区块hash为"+lastHash);
+            System.out.println("区块计算完成，当前区块hash为" + lastHash);
             postBlock(blockJson);
             powCalculate();//新区块计算开始
-        }else {
+        } else {
             System.out.println("TaskService中saveAndPostBlock（）方法文件写入失败，请查看异常");
         }
     }
@@ -101,7 +102,7 @@ public class TaskService implements ITaskService {
         BlockBean blockBean = new BlockBean();
         List<Transaction> transactionList = TransactonListOperatorUtils.getTransactionList();
         blockBean.setTransactionCount(transactionList.size());
-        blockBean.setBlockHeight(blockModel.getTopBlockHeight()+1);
+        blockBean.setBlockHeight(blockModel.getTopBlockHeight() + 1);
         blockBean.setBlockHeader(getBlockHeader(transactionList, startTime, endTime, lastI, lastHash));
         blockBean.setTransactions(transactionList);
         return JsonUtil.toJson(blockBean);
@@ -114,7 +115,8 @@ public class TaskService implements ITaskService {
      */
     private BlockBean.BlockHeaderBean getBlockHeader(List<Transaction> transactionList, long startTime, long endTime, int lastI, String lastHash) {
         BlockBean.BlockHeaderBean blockHeaderBean = new BlockBean.BlockHeaderBean();
-        blockHeaderBean.setPreviousHash(blockModel.getTopBlockHash()==null?"":blockModel.getTopBlockHash());
+        String topBlockHash = blockModel.getTopBlockHash();
+        blockHeaderBean.setPreviousHash(topBlockHash == null ? "" : topBlockHash);
         ArrayList<String> transactionJsonList = new ArrayList<>();
         for (Transaction transaction : transactionList) {
             transactionJsonList.add(transaction.getTransactionId());
@@ -126,4 +128,21 @@ public class TaskService implements ITaskService {
         blockHeaderBean.setBlockHash(lastHash);
         return blockHeaderBean;
     }
+
+//    @Override
+//    public void contextInitialized(ServletContextEvent servletContextEvent) {
+//
+//    }
+//
+//    @Override
+//    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+//        try {
+//            isInterrupt = true;
+//            isStop = true;
+//            Thread.sleep(1000);
+//            System.out.println("真的停止了");
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

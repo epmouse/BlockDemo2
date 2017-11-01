@@ -45,7 +45,9 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-
+  <listener>
+    <listener-class>org.cityu.cs.ian.service.Threads.impl.TaskService</listener-class>
+  </listener>
   <servlet>
     <servlet-name>mybatis</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

@@ -40,7 +40,7 @@ public class BlockTestCotroller {
     @RequestMapping("init")
     @ResponseBody
     public String init() {
-//        syncBlockService.downloadBlock();
+        syncBlockService.downloadBlock();
         TaskService.isStop=false;
         taskService.powCalculate();//初始化触发计算
         return Constant.SUCCESS_RESPONSE;

@@ -5,6 +5,7 @@ import org.cityu.cs.ian.model.IBlockModel;
 import org.cityu.cs.ian.model.bean.BlockBackBean;
 import org.cityu.cs.ian.model.bean.BlockBean;
 import org.cityu.cs.ian.model.bean.Transaction;
+import org.cityu.cs.ian.model.bean.TransactionForWeb;
 import org.cityu.cs.ian.service.Threads.ISyncBlockService;
 import org.cityu.cs.ian.service.Threads.ITaskService;
 import org.cityu.cs.ian.util.HttpUtils;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,11 +124,35 @@ public class SyncBlockServiceImpl implements ISyncBlockService {
             for (int j = 0; j < transactions.size(); j++) {
                 Transaction transaction = transactions.get(j);
                 if (transaction.getTransactionId().equals(transactionId)) {
-                    transactionJson[0] = JsonUtil.toJson(transaction);
+                    transactionJson[0]= transformTransaction(transaction);
                 }
             }
         }
         return transactionJson[0];
+    }
+    //吧transaction转换成前端需要的格式
+    private String transformTransaction(Transaction p) {
+        TransactionForWeb transactionForWeb = new TransactionForWeb();
+        transactionForWeb.setTransactionId(p.getTransactionId());
+        transactionForWeb.setData(p.getData());
+        transactionForWeb.setFromPubkey(p.getFromPubkey());
+        transactionForWeb.setToPubkey(p.getToPubkey());
+        transactionForWeb.setInclude(p.getInclude());
+        transactionForWeb.setIsSign(p.getIsSign());
+        transactionForWeb.setLink(p.getLink());
+        transactionForWeb.setSignatures(p.getSignatures());
+        transactionForWeb.setToken(p.getToken());
+        transactionForWeb.setTotal(p.getTotal());
+        transactionForWeb.setType(p.getType());
+        TransactionForWeb.FromBean fromBean = new TransactionForWeb.FromBean();
+        fromBean.setFrom(p.getFrom());
+        fromBean.setName(p.getTransactionId());
+        TransactionForWeb.ToBean toBean = new TransactionForWeb.ToBean();
+        toBean.setTo(p.getTo());
+        toBean.setName(p.getTransactionId());
+        transactionForWeb.setFrom(fromBean);
+        transactionForWeb.setTo(toBean);
+        return JsonUtil.toJson(transactionForWeb);
     }
 
     @Override

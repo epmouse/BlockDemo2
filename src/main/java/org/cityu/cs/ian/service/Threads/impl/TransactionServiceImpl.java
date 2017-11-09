@@ -67,8 +67,9 @@ public class TransactionServiceImpl implements ITransactionService {
         json.put("fromPubkey", p.getFromPubkey());
         json.put("toPubkey", p.getToPubkey());
         json.put("include", p.getInclude());
-        json.put("total", p.getTotal());
-        json.put("link", p.getLink());
+//        json.put("total", p.getTotal());
+//        json.put("link", p.getLink());
+        json.put("type",p.getType());
         return json.toJSONString();
     }
 
